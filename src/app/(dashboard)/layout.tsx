@@ -38,7 +38,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   
 
   const getMenuItems = (): MenuProps['items'] => {
-    switch (user.role) {
+    switch (user?.role) {
       case userRole.ADMIN:
         return [
           {
@@ -72,7 +72,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             ],
           },
         ];
-      case userRole.STUDENT:
+      case userRole?.STUDENT:
         return [
           {
             key: 'dashboard',
@@ -101,7 +101,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           }
         
         ];
-      case userRole.FACULTY:
+      case userRole?.FACULTY:
         return [
           {
             key: 'dashboard',
@@ -159,8 +159,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <Sider breakpoint="lg" collapsedWidth="0">
         <div className="demo-logo-vertical" />
         <h1 className="ps-4 p-2 text-white">
-          PH UNI
           <Link href={"/"}>
+          PH UNI
           </Link>
           
           </h1>
@@ -168,12 +168,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       </Sider>
 
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} >
- <button 
- onClick={handleLogout}
- className='btn bg-blue-600 p-3 m-2'
- >Logout</button>
-        </Header>
+      <Header style={{ padding: 0, background: colorBgContainer }}>
+  <div className="flex justify-end p-4">
+    <button
+      onClick={handleLogout}
+      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+    >
+      Logout
+    </button>
+  </div>
+</Header>
+
 
 
         <Content style={{ margin: '24px 16px 0' }}>

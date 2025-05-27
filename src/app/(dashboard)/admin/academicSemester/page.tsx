@@ -27,7 +27,7 @@ const AcademicSemester = () => {
         <ul className="space-y-4">
           {semesters.map((semester: any) => (
             <li
-              key={semester.id}
+              key={semester._id}
               className="p-4 border rounded-lg shadow hover:shadow-md transition"
             >
               <p><strong>Name:</strong> {semester.name}</p>

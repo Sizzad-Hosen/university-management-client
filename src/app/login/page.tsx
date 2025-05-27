@@ -1,110 +1,74 @@
-"use client";
+'use client';
 
+import { Button } from 'antd';
+import { FieldValues } from 'react-hook-form';
 import { useLoginMutation } from '@/redux/features/auth/authApi';
-import { useAppDispatch } from '@/redux/hook';
-import {  setUser } from '@/redux/features/auth/authSlice'; // Ensure it's correctly imported
+
+
 import { verifyToken } from '@/utils/verifyToken';
-import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/redux/hook';
+import { setUser, TUser } from '@/redux/features/auth/authSlice';
+import PHForm from '../components/form/From';
+import PHInput from '../components/form/FInput';
 
-const LoginForm: React.FC = () => {
-  const [user, setUserState] = useState<{ id: string; password: string }>({ id: '', password: '' });
 
-  const [login, { isLoading }] = useLoginMutation();
+
+const Login = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
-  // Handle input field changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUserState(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+  const defaultValues = {
+    userId: 'A-0002',
+    password: 'admin123',
   };
-const router = useRouter();
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const res = await login(user).unwrap();
-    const decodedUser = verifyToken(res.data.accessToken);
-    console.log('Decoded User:', decodedUser);
+  const [login] = useLoginMutation();
 
-    // Dispatch to redux
-    dispatch(setUser({ user: decodedUser, token: res.data.accessToken }));
-    
-    
-    if (decodedUser?.role) {
-      router.push(`/${decodedUser.role}/dashboard`);
-    } else {
-      console.error('Role not found in token');
+  const onSubmit = async (data: FieldValues) => {
+    const toastId = toast.loading('Logging in...');
+
+    try {
+      const userInfo = {
+        id: data.userId,
+        password: data.password,
+      };
+
+      const res = await login(userInfo).unwrap();
+      const user = verifyToken(res.data.accessToken) as TUser;
+
+    console.log('res',res)
+    console.log('user',user)
+
+      dispatch(setUser({ user, token: res.data.accessToken }));
+
+      toast.success('Logged in', { id: toastId });
+
+      router.push(`/${user.role}/dashboard`);
+      
+    } catch (err) {
+      toast.error('Login failed', { id: toastId });
     }
-    
-    console.log('Login successful:', res);
-  } catch (err) {
-    console.error('Login failed:', err);
-  }
-};
-
-
-  // Reset ID and Password
-  const resetId = () => setUserState(prev => ({ ...prev, id: '' }));
-  const resetPassword = () => setUserState(prev => ({ ...prev, password: '' }));
+  };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+    <div className="flex items-center justify-center min-h-screen">
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="id" className="block text-gray-700 font-medium mb-2">ID</label>
-            <input
-              type="text"
-              id="id"
-              name="id"
-              value={user.id}
-              onChange={handleChange}
-              placeholder="Enter your ID"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+      <PHForm onSubmit={onSubmit} defaultValues={defaultValues}>
 
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-2">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={user.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+        <PHInput type="text" name="userId" label="ID:" />
+        <PHInput type="password" name="password" label="Password:" />
 
-          <div className="flex justify-between items-center mb-6">
-            <button type="button" onClick={resetId} className="text-blue-500 hover:underline text-sm">
-              Reset ID
-            </button>
-            <button type="button" onClick={resetPassword} className="text-blue-500 hover:underline text-sm">
-              Reset Password
-            </button>
-          </div>
+        <Button htmlType="submit" className="mt-4">
+          Login
+        </Button>
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Logging in...' : 'Submit'}
-          </button>
-        </form>
-      </div>
+      </PHForm>
+
+
     </div>
   );
 };
 
-export default LoginForm;
+export default Login;
