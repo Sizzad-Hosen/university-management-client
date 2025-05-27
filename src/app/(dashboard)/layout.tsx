@@ -67,7 +67,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               },
               {
                 key: 'Academic Semester Management',
-                label: <Link href="/admin/academicSemester">Academic Semester</Link>,
+                label: <Link href="/admin/create-academic-semester">Academic Semester</Link>,
               },
             ],
           },
