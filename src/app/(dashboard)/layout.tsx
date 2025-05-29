@@ -45,10 +45,41 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             key: 'admin/dashboard',
             label: <Link href="/dashboard">Dashboard</Link>,
           },
-          // {
-          //   key: 'profile',
-          //   label: <Link href="/profile">Profile</Link>,
-          // },
+
+          {
+                key: 'Academic Semester Management',
+                label: 'AcademicManagement',
+                children:[
+
+                 {
+                 key: 'createAcademicSemester',
+                 label: <Link href="/admin/create-academic-semester"> Create.A.Semester</Link>,
+                 },
+                 {
+                 key: 'academicSemester',
+                 label: <Link href="/admin/academic-semester"> Academic Semester</Link>,
+                 },
+                 {
+                 key: 'createAcademicDepartment',
+                 label: <Link href="/admin/create-academic-department"> Create.A.Department</Link>,
+                 },
+                 {
+                 key: 'academicDepartment',
+                 label: <Link href="/admin/academic-department"> Academic Department</Link>,
+                 },
+                 {
+                 key: 'createAcademicFaculty',
+                 label: <Link href="/admin/create-academic-faculty"> Create.A.Faculty</Link>,
+                 },
+                 {
+                 key: 'academicFaculty',
+                 label: <Link href="/admin/academic-faculty"> Academic Faculty</Link>,
+                 },
+
+                ]
+              
+          },
+
           {
             key: 'userManagement',
             label: 'User Management',
@@ -65,10 +96,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 key: 'createFaculty',
                 label: <Link href="/admin/create-faculty">Create Faculty</Link>,
               },
-              {
-                key: 'Academic Semester Management',
-                label: <Link href="/admin/create-academic-semester">Academic Semester</Link>,
-              },
+            
             ],
           },
         ];
