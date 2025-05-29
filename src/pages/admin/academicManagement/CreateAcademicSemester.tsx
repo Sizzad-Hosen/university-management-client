@@ -1,7 +1,9 @@
 import PHForm from "@/app/components/form/From";
 import FSelect from "@/app/components/form/FSelect";
 import { monthOptions, semesterOptions } from "@/constant/semester";
+import { useAddAcademicSemesterMutation } from "@/redux/features/admin/academicManagement";
 import { academicSemesterSchema } from "@/Schemas/AcademicManagement.schema";
+import { TResponse } from "@/types/global";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Col, Flex } from "antd";
 import { FieldValues, SubmitHandler } from "react-hook-form";
@@ -10,43 +12,61 @@ import { toast } from "sonner";
 const currentYear = new Date().getFullYear();
 
 const yearOptions = [0, 1, 2, 3, 4].map((number) => ({
-
   value: String(currentYear + number),
   label: String(currentYear + number),
-
 }));
 
 const CreateAcademicSemester = () => {
+  const [addAcademicSemester] = useAddAcademicSemesterMutation();
 
-  // const [addAcademicSemester] = useAddAcademicSemesterMutation();
+const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const toastId = toast.loading('Creating...');
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  try {
+    const name = semesterOptions.find(opt => opt.value === data.name)?.label;
+    
+    if (!name) {
+      throw new Error('Invalid semester selection');
+    }
 
-    const toastId = toast.loading('Creating...');
+    // Convert numeric month values to month names
+    const startMonth = monthOptions.find(opt => opt.value === data.startMonth)?.label;
+    const endMonth = monthOptions.find(opt => opt.value === data.endMonth)?.label;
 
-    const name = semesterOptions[Number(data?.name) - 1]?.label;
+    if (!startMonth || !endMonth) {
+      throw new Error('Invalid month selection');
+    }
 
-    // const semesterData = {
-    //   name,
-    //   code: data.name,
-    //   year: data.year,
-    //   startMonth: data.startMonth,
-    //   endMonth: data.endMonth,
-    // };
+    const semesterData = {
+      name,
+      code: data.name,
+      year: data.year,
+      startMonth, // Now sending month name instead of number
+      endMonth,   // Now sending month name instead of number
+    };
 
-    // try {
-    //   const res = (await addAcademicSemester(semesterData)) as TResponse;
-    //   console.log(res);
-    //   if (res.error) {
-    //     toast.error(res.error.data.message, { id: toastId });
-    //   } else {
-    //     toast.success('Semester created', { id: toastId });
-    //   }
-    // } catch (err) {
-    //   toast.error('Something went wrong', { id: toastId });
-    // }
-  };
+    console.log('Submitting:', semesterData);
 
+    const result = await addAcademicSemester(semesterData).unwrap();
+
+    toast.success('Semester created successfully!', { id: toastId });
+    
+  } catch (error: any) {
+    console.error('Creation error:', error);
+    
+    let errorMessage = 'Failed to create semester';
+    
+    if (error.data?.errorSources) {
+      errorMessage = error.data.errorSources
+        .map((err: any) => `${err.path}: ${err.message}`)
+        .join('\n');
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    toast.error(errorMessage, { id: toastId });
+  }
+};
 
   return (
     <Flex justify="center" align="center">
@@ -64,7 +84,9 @@ const CreateAcademicSemester = () => {
           />
           <FSelect label="End Month" name="endMonth" options={monthOptions} />
 
-          <Button htmlType="submit">Submit</Button>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
         </PHForm>
       </Col>
     </Flex>
