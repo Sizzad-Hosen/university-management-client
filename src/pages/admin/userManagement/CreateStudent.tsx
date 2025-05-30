@@ -1,7 +1,11 @@
+'use client'
+
+import FDatePicker from "@/app/components/form/FDatePicker";
 import PHInput from "@/app/components/form/FInput";
 import PHForm from "@/app/components/form/From";
 import FSelect from "@/app/components/form/FSelect";
 import { semesterOptions } from "@/constant/semester";
+import { useGetAllSemestersQuery } from "@/redux/features/admin/academicManagement.api";
 import { useAddStudentMutation } from "@/redux/features/admin/usermanagement.api";
 import { Button, Col, Divider, Form, Input, Row } from "antd";
 import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
@@ -88,21 +92,21 @@ const CreateStudent = () => {
 
   console.log({ data, error });
 
-//   const { data: sData, isLoading: sIsLoading } =
-//     useGetAllSemestersQuery(undefined);
+  const { data: sData, isLoading: sIsLoading } =
+    useGetAllSemestersQuery(undefined);
 
 //   const { data: dData, isLoading: dIsLoading } =
 //     useGetAcademicDepartmentsQuery(undefined);
 
-//   const semesterOptions = sData?.data?.map((item) => ({
-//     value: item._id,
-//     label: `${item.name} ${item.year}`,
-//   }));
+  const semesterOptions = sData?.data?.map((item) => ({
+    value: item._id,
+    label: `${item.name} ${item.year}`,
+  }));
 
-//   const departmentOptions = dData?.data?.map((item) => ({
-//     value: item._id,
-//     label: item.name,
-//   }));
+  const departmentOptions = dData?.data?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
 
@@ -142,7 +146,7 @@ const CreateStudent = () => {
               <FSelect options={genderOptions} name="gender" label="Gender" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHDatePicker name="dateOfBirth" label="Date of birth" />
+              <FDatePicker name="dateOfBirth" label="Date of birth" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <FSelect
