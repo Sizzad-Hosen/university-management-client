@@ -5,26 +5,30 @@ import { TResponseRedux } from "@/types/global";
 const academicManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllSemesters: builder.query({ 
-      query: () => ({
-        url: '/academic-semesters',
-        method: 'GET',
-      }),
-      transformErrorResponse:(response:TResponseRedux<TAcademicSemester[]>)=>{
-       
+      query: (args) => {
+        const params = new URLSearchParams();
+        params.append(args[0].name, args[0].value);
+
         return {
-         data:response.data,
-         meta:response.meta,
-      };
-    };
+          url: '/academic-semesters',
+          method: 'GET',
+          params: params
+        };
+      },
+      transformErrorResponse: (response: TResponseRedux<TAcademicSemester[]>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      }
     }),
   
-
-    addAcademicSemester : builder.mutation({
-        query:(data)=>({
-            url:'/academic-semesters/create-academic-semester',
-            method:'POST',
-            body:data
-        })
+    addAcademicSemester: builder.mutation({
+      query: (data) => ({
+        url: '/academic-semesters/create-academic-semester',
+        method: 'POST',
+        body: data
+      })
     })
   }),
 });

@@ -1,7 +1,8 @@
+'use client'
 import { useGetAllSemestersQuery } from '@/redux/features/admin/academicManagement';
+import { TAcademicSemester } from '@/types/academicManagement.type';
 import { Button, Table, TableColumnsType, TableProps } from 'antd';
 import { useState } from 'react';
-
 
 
 export type TTableData = Pick<
@@ -24,7 +25,7 @@ const AcademicSemester = () => {
   const tableData = semesterData?.data?.map(
 
     ({ _id, name, startMonth, endMonth, year }) => ({
-      
+
       key: _id,
       name,
       startMonth,
