@@ -67,7 +67,18 @@ getAllFaculty: builder.query({
         body: data
       })
     }),
+    getAllDepartment: builder.query({
+      query: () => ({
+        url: '/academic-departments',
+        method: 'GET',
+      }),
+      transformResponse: (response: TResponseRedux<any>) => ({
+        data: response.data,
+        meta: response.meta
+      }),
+    }),
 
+  
 
       
   }),
@@ -75,4 +86,4 @@ getAllFaculty: builder.query({
 
 
 
-export const { useGetAllFacultyQuery,useGetAllSemestersQuery,useAddAcademicSemesterMutation,useAddAcademicDepartmentMutation } = academicManagementApi;
+export const { useGetAllFacultyQuery,useGetAllSemestersQuery,useAddAcademicSemesterMutation,useAddAcademicDepartmentMutation ,useGetAllDepartmentQuery} = academicManagementApi;
