@@ -1,34 +1,39 @@
 import { baseApi } from "@/redux/api/baseApi";
 import { TAcademicSemester } from "@/types/academicManagement.type";
 import { TResponseRedux } from "@/types/global";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 const academicManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllSemesters: builder.query({ 
+    getAllSemesters: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
-
-        if(args){
-          params.forEach((item)=>{
-            params.append(item.name , item.value)
-          })
+        
+        if (args?.length) {
+          params.append(args[0].name, args[0].value);
         }
-        params.append(args[0].name, args[0].value);
-
         return {
           url: '/academic-semesters',
           method: 'GET',
           params: params
         };
       },
-      transformErrorResponse: (response: TResponseRedux<TAcademicSemester[]>) => {
+      transformErrorResponse: (
+        baseQueryReturnValue: FetchBaseQueryError
+      ) => {
+        // Handle the error response according to your API's error structure
         return {
-          data: response.data,
-          meta: response.meta,
+          status: baseQueryReturnValue.status,
+          message: (baseQueryReturnValue.data as any)?.message || 'An error occurred',
+          // Add other error properties as needed
         };
-      }
+      },
+      transformResponse: (response: TResponseRedux<TAcademicSemester[]>) => ({
+        data: response.data,
+        meta: response.meta
+      })
     }),
-  
+    
     addAcademicSemester: builder.mutation({
       query: (data) => ({
         url: '/academic-semesters/create-academic-semester',

@@ -28,5 +28,8 @@ export type TMeta ={
 
 
 }
-
+export type TQueryParam = {
+  name: string;
+  value: string | number | boolean; // Accept multiple types
+};
 export type TResponseRedux<T> = TResponse<T> & BaseQueryApi;

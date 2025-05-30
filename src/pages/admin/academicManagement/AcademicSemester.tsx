@@ -1,15 +1,16 @@
 'use client'
 import { useGetAllSemestersQuery } from '@/redux/features/admin/academicManagement';
 import { TAcademicSemester } from '@/types/academicManagement.type';
+import { TQueryParam } from '@/types/global';
 import { Button, Table, TableColumnsType, TableProps } from 'antd';
 import { useState } from 'react';
-
 
 export type TTableData = Pick<
   TAcademicSemester,
   'name' | 'year' | 'startMonth' | 'endMonth'
->;
-
+> & {
+  key: string;
+};
 const AcademicSemester = () => {
 
   const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
@@ -20,19 +21,20 @@ const AcademicSemester = () => {
     isFetching,
   } = useGetAllSemestersQuery(params);
 
+  console.log('data',semesterData)
+
   console.log({ isLoading, isFetching });
 
-  const tableData = semesterData?.data?.map(
+ const tableData = (semesterData?.data?.map(
 
-    ({ _id, name, startMonth, endMonth, year }) => ({
-
-      key: _id,
-      name,
-      startMonth,
-      endMonth,
-      year,
-    })
-  );
+  (semester: TAcademicSemester) => ({
+    key: semester._id,
+    name: semester.name,
+    startMonth: semester.startMonth,
+    endMonth: semester.endMonth,
+    year: semester.year,
+  })
+)) || [];
 
   const columns: TableColumnsType<TTableData> = [
     {
@@ -96,14 +98,20 @@ const AcademicSemester = () => {
     },
   ];
 
-  const onChange: TableProps<TTableData>['onChange'] = (
-    _pagination,
-    filters,
-    _sorter,
-    extra
-  ) => {
+interface IFilters {
+  name?: (string | number | boolean)[];
+  year?: (string | number | boolean)[];
+  // Add other filterable columns here
+}
+
+const onChange: TableProps<TTableData>['onChange'] = (
+  _pagination,
+  filters: IFilters,
+  _sorter,
+  extra
+) => {
     if (extra.action === 'filter') {
-      
+
       const queryParams: TQueryParam[] = [];
 
       filters.name?.forEach((item) =>
