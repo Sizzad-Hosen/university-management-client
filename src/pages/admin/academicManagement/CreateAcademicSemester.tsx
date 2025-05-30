@@ -3,7 +3,7 @@ import FSelect from "@/app/components/form/FSelect";
 import { monthOptions, semesterOptions } from "@/constant/semester";
 import { useAddAcademicSemesterMutation } from "@/redux/features/admin/academicManagement";
 import { academicSemesterSchema } from "@/Schemas/AcademicManagement.schema";
-import { TResponse } from "@/types/global";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Col, Flex } from "antd";
 import { FieldValues, SubmitHandler } from "react-hook-form";
@@ -20,6 +20,7 @@ const CreateAcademicSemester = () => {
   const [addAcademicSemester] = useAddAcademicSemesterMutation();
 
 const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+
   const toastId = toast.loading('Creating...');
 
   try {
@@ -55,7 +56,7 @@ const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.error('Creation error:', error);
     
     let errorMessage = 'Failed to create semester';
-    
+
     if (error.data?.errorSources) {
       errorMessage = error.data.errorSources
         .map((err: any) => `${err.path}: ${err.message}`)
