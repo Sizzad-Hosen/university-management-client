@@ -4,35 +4,48 @@ import PHInput from '@/app/components/form/FInput';
 import PHForm from '@/app/components/form/From';
 import { Button, message } from 'antd';
 import FSelect from '@/app/components/form/FSelect';
-import { useGetAllFacultyQuery } from '@/redux/features/admin/academicManagement.api';
+import { useAddAcademicDepartmentMutation, useGetAllFacultyQuery } from '@/redux/features/admin/academicManagement.api';
 import { IFaculty } from '@/types/global';
+import { toast } from 'sonner';
+
 
 
 const CreateAcademicDepartment = () => {
   // Fetch all faculties
   const { data: facultyData, isLoading } = useGetAllFacultyQuery();
-  
+
+  const [addAcademicDepartment] = useAddAcademicDepartmentMutation();
+
   // Prepare faculty options for select
   const facultyOptions = facultyData?.data?.map((faculty: IFaculty) => ({
     value: faculty._id,
     label: faculty.name,
   })) || [];
 
-  const onSubmit = async (data: any) => {
-    console.log('Form data to submit:', data);
-    
-    try {
-      // Here you would typically make an API call to create the department
-      // Example:
-      // const res = await createAcademicDepartment(data).unwrap();
-      // console.log('Department created:', res);
-      
+ const onSubmit = async (data: any) => {
+  console.log('Form data to submit:', data);
+
+  const departmentData = {
+    name: data.name,
+    academicFaculty: data.academicFaculty // This should come from your form
+  }
+  
+  try {
+    const result = await addAcademicDepartment(departmentData);
+
+    if (result.data?.success) {
       message.success('Academic department created successfully!');
-    } catch (error) {
-      console.error('Error creating department:', error);
-      message.error('Failed to create academic department');
+      toast.success('Academic department created successfully!');
+    } else {
+      message.error(result.data?.message || 'Failed to create department');
+      toast.error(result.data?.message || 'Failed to create department');
     }
-  };
+
+  } catch (error) {
+    console.error('Error creating department:', error);
+    message.error('Failed to create academic department');
+  }
+};
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>

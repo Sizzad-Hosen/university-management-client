@@ -6,6 +6,7 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 const academicManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
 
+    // academic faculties
 getAllFaculty: builder.query({
   query: () => ({
     url: '/academic-faculties',
@@ -16,7 +17,9 @@ getAllFaculty: builder.query({
     meta: response.meta
   }),
 }),
+
     
+// academc semester
     getAllSemesters: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -55,10 +58,21 @@ getAllFaculty: builder.query({
       })
     }),
 
+    // academic depertment
+
+       addAcademicDepartment: builder.mutation({
+      query: (data) => ({
+        url: '/academic-departments/create-academic-department',
+        method: 'POST',
+        body: data
+      })
+    }),
+
+
       
   }),
 });
 
 
 
-export const { useGetAllFacultyQuery,useGetAllSemestersQuery,useAddAcademicSemesterMutation } = academicManagementApi;
+export const { useGetAllFacultyQuery,useGetAllSemestersQuery,useAddAcademicSemesterMutation,useAddAcademicDepartmentMutation } = academicManagementApi;
