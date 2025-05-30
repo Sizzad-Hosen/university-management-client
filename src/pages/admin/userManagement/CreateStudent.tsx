@@ -4,11 +4,13 @@ import FDatePicker from "@/app/components/form/FDatePicker";
 import PHInput from "@/app/components/form/FInput";
 import PHForm from "@/app/components/form/From";
 import FSelect from "@/app/components/form/FSelect";
-import { semesterOptions } from "@/constant/semester";
-import { useGetAllSemestersQuery } from "@/redux/features/admin/academicManagement.api";
+import { bloodGroupOptions, genderOptions } from "@/constant/global";
+
+import { useGetAllDepartmentQuery, useGetAllSemestersQuery } from "@/redux/features/admin/academicManagement.api";
 import { useAddStudentMutation } from "@/redux/features/admin/usermanagement.api";
 import { Button, Col, Divider, Form, Input, Row } from "antd";
 import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 
 const studentDummyData = {
 
@@ -88,15 +90,15 @@ const studentDefaultValues = {
 };
 
 const CreateStudent = () => {
-  const [addStudent, { data, error }] = useAddStudentMutation();
+  const [addStudent, { data, error }] =  useAddStudentMutation();
 
   console.log({ data, error });
 
   const { data: sData, isLoading: sIsLoading } =
-    useGetAllSemestersQuery(undefined);
+    useGetAllSemestersQuery();
 
-//   const { data: dData, isLoading: dIsLoading } =
-//     useGetAcademicDepartmentsQuery(undefined);
+  const { data: dData, isLoading: dIsLoading } =
+    useGetAllDepartmentQuery();
 
   const semesterOptions = sData?.data?.map((item) => ({
     value: item._id,
@@ -108,23 +110,37 @@ const CreateStudent = () => {
     label: item.name,
   }));
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 
-    const studentData = {
-      password: 'student123',
-      student: data,
-    };
+    const toastId = toast.loading("Creating student...");
+    
+    try {
+      const studentData = {
+        password: '123456',
+        student: data,
+      };
 
-    const formData = new FormData();
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(studentData));
+      
+      if (data.image) {
+        formData.append('file', data.image);
+      }
 
-    formData.append('data', JSON.stringify(studentData));
-    formData.append('file', data.image);
+      const response = await addStudent(formData).unwrap();
 
-    addStudent(formData);
-
-    //! This is for development
-    //! Just for checking
-    console.log(Object.fromEntries(formData));
+      console.log('response', response.data)
+      
+      if (response.success) {
+        toast.success("Student created successfully!", { id: toastId });
+        console.log("Student created:", response.data);
+      } else {
+        throw new Error(response.message || "Failed to create student");
+      }
+    } catch (error: any) {
+      console.error("Error creating student:", error);
+      toast.error(error?.data?.message || error.message || "Failed to create student", { id: toastId });
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 import { baseApi } from "@/redux/api/baseApi";
 
-const userManagementApi = baseApi.injectEndpoints
-({
+const userManagementApi = baseApi.injectEndpoints({
+    
     endpoints:(builder)=>({
 
         addStudent:builder.mutation({
