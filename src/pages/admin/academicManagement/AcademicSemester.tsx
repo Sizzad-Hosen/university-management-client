@@ -103,6 +103,7 @@ const AcademicSemester = () => {
     extra
   ) => {
     if (extra.action === 'filter') {
+      
       const queryParams: TQueryParam[] = [];
 
       filters.name?.forEach((item) =>
