@@ -33,3 +33,7 @@ export type TQueryParam = {
   value: string | number | boolean; // Accept multiple types
 };
 export type TResponseRedux<T> = TResponse<T> & BaseQueryApi;
+export interface IFaculty {
+  _id: string;
+  name: string;
+}

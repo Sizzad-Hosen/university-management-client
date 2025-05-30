@@ -1,18 +1,37 @@
-'use client'; // Add this if using Next.js App Router
+'use client';
 
 import PHInput from '@/app/components/form/FInput';
 import PHForm from '@/app/components/form/From';
-import React from 'react';
 import { Button, message } from 'antd';
 import FSelect from '@/app/components/form/FSelect';
+import { useGetAllFacultyQuery } from '@/redux/features/admin/academicManagement.api';
+import { IFaculty } from '@/types/global';
+
 
 const CreateAcademicDepartment = () => {
+  // Fetch all faculties
+  const { data: facultyData, isLoading } = useGetAllFacultyQuery();
   
-  const onSubmit = (data: any) => {
-    console.log(data);
-  
+  // Prepare faculty options for select
+  const facultyOptions = facultyData?.data?.map((faculty: IFaculty) => ({
+    value: faculty._id,
+    label: faculty.name,
+  })) || [];
+
+  const onSubmit = async (data: any) => {
+    console.log('Form data to submit:', data);
     
-    message.success('Academic department created successfully!');
+    try {
+      // Here you would typically make an API call to create the department
+      // Example:
+      // const res = await createAcademicDepartment(data).unwrap();
+      // console.log('Department created:', res);
+      
+      message.success('Academic department created successfully!');
+    } catch (error) {
+      console.error('Error creating department:', error);
+      message.error('Failed to create academic department');
+    }
   };
 
   return (
@@ -25,13 +44,14 @@ const CreateAcademicDepartment = () => {
           label="Department Name" 
         />
         
-        {/* Add more fields as needed */}
-                  <FSelect
-                options={facultyOptions}
-                name="bloogGroup"
-                label="Blood group"
-              />
-    
+        <FSelect
+          options={facultyOptions}
+          name="academicFaculty"  // Changed to match backend expectation
+          label="Academic Faculty"
+          loading={isLoading}
+          placeholder="Select Faculty"
+        />
+        
         <Button 
           type="primary" 
           htmlType="submit"

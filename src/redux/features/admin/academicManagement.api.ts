@@ -5,6 +5,18 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 const academicManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+
+getAllFaculty: builder.query({
+  query: () => ({
+    url: '/academic-faculties',
+    method: 'GET',
+  }),
+  transformResponse: (response: TResponseRedux<any>) => ({
+    data: response.data,
+    meta: response.meta
+  }),
+}),
+    
     getAllSemesters: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -18,6 +30,7 @@ const academicManagementApi = baseApi.injectEndpoints({
           params: params
         };
       },
+
       transformErrorResponse: (
         baseQueryReturnValue: FetchBaseQueryError
       ) => {
@@ -40,10 +53,12 @@ const academicManagementApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data
       })
-    })
+    }),
+
+      
   }),
 });
 
 
 
-export const { useGetAllSemestersQuery,useAddAcademicSemesterMutation } = academicManagementApi;
+export const { useGetAllFacultyQuery,useGetAllSemestersQuery,useAddAcademicSemesterMutation } = academicManagementApi;
