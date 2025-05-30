@@ -1,7 +1,7 @@
 import PHForm from "@/app/components/form/From";
 import FSelect from "@/app/components/form/FSelect";
 import { monthOptions, semesterOptions } from "@/constant/semester";
-import { useAddAcademicSemesterMutation } from "@/redux/features/admin/academicManagement";
+import { useAddAcademicSemesterMutation } from "@/redux/features/admin/academicManagement.api";
 import { academicSemesterSchema } from "@/Schemas/AcademicManagement.schema";
 
 import { zodResolver } from "@hookform/resolvers/zod";

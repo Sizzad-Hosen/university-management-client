@@ -1,5 +1,5 @@
 'use client'
-import { useGetAllSemestersQuery } from '@/redux/features/admin/academicManagement';
+import { useGetAllSemestersQuery } from '@/redux/features/admin/academicManagement.api';
 import { TAcademicSemester } from '@/types/academicManagement.type';
 import { TQueryParam } from '@/types/global';
 import { Button, Table, TableColumnsType, TableProps } from 'antd';
