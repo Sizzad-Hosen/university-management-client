@@ -1,3 +1,7 @@
+'use client'
+import { useGetAllStudentsQuery } from '@/redux/features/admin/usermanagement.api';
+import { TQueryParam } from '@/types/global';
+import { TStudent } from '@/types/userManagement.type';
 import {
   Button,
   Pagination,
@@ -6,10 +10,9 @@ import {
   TableColumnsType,
   TableProps,
 } from 'antd';
+import Link from 'next/link';
 import { useState } from 'react';
-import { TQueryParam, TStudent } from '../../../types';
-import { useGetAllStudentsQuery } from '../../../redux/features/admin/userManagement.api';
-import { Link } from 'react-router-dom';
+
 
 export type TTableData = Pick<
   TStudent,
@@ -72,7 +75,7 @@ const StudentData = () => {
         console.log(item);
         return (
           <Space>
-            <Link to={`/admin/student-data/${item.key}`}>
+            <Link href={`/admin/student-data/${item.key}`}>
               <Button>Details</Button>
             </Link>
             <Button>Update</Button>

@@ -96,6 +96,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 key: 'createFaculty',
                 label: <Link href="/admin/create-faculty">Create Faculty</Link>,
               },
+              {
+                key: 'students',
+                label: <Link href="/admin/student-data">Students</Link>,
+              },
             
             ],
           },
