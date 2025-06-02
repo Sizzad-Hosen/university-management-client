@@ -1,5 +1,5 @@
 "use client"
-import { useGetAllRegisteredSemesterQuery } from '@/redux/features/admin/courseManagement.api';
+import { useGetAllRegisteredSemesterQuery, useUpdateSemesterRegistrationMutation } from '@/redux/features/admin/courseManagement.api';
 import { TSemester } from '@/types/courseManagement.type';
 import { Button, Dropdown, Table, TableColumnsType, Tag } from 'antd';
 import moment from 'moment'
@@ -29,7 +29,7 @@ const RegisteredSemesters = () => {
   const { data: semesterData, isFetching } =
     useGetAllRegisteredSemesterQuery(undefined);
 
-  // const [updateSemesterStatus] = useUpdateRegisteredSemesterMutation();
+   const [updateSemesterStatus] = useUpdateSemesterRegistrationMutation(undefined);
 
   console.log(semesterId);
 
@@ -46,7 +46,7 @@ const RegisteredSemesters = () => {
   );
 
   const handleStatusUpdate = (data: { key: any; }) => {
-    
+
     const updateData = {
       id: semesterId,
       data: {
