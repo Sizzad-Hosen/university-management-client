@@ -63,7 +63,9 @@ const courseManagementApi = baseApi.injectEndpoints({
         getAllCourses: builder.query({
 
               query: (args) => {
+
                 console.log(args);
+
                 const params = new URLSearchParams();
         
                 if (args) {
@@ -78,6 +80,7 @@ const courseManagementApi = baseApi.injectEndpoints({
                    params: params,
                 };
               },
+              
               providesTags:['courses'],
               transformResponse: (response: TResponseRedux<TCourses[]>) => {
                 return {
