@@ -2,7 +2,9 @@ import { TAcademicSemester } from "./academicManagement.type";
 
 
 
-export type TSemester ={
+export type TSemester = {
+
+
     _id:string;
     academicSemester:TAcademicSemester;
     status:string;
@@ -14,3 +16,14 @@ export type TSemester ={
     updatedAt:string;
 
 }
+
+
+export type TCourses = {
+  _id: any;
+  title: string;
+  prefix: string;
+  code: number;
+  credits: number;
+  isDeleted?: boolean;
+  preRequisiteCourses: [];
+};

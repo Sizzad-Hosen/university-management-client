@@ -5,6 +5,9 @@ type TFSelectProps = {
   label: string;
   name: string;
   options: { value: string; label: string; disabled?: boolean }[];
+  disabled?:boolean;
+  mode?:'multiple' | undefined;
+  
 };
 
 const FSelect = ({ label, name, options }: TFSelectProps) => {

@@ -1,6 +1,6 @@
 import { baseApi } from "@/redux/api/baseApi";
-import { TAcademicSemester } from "@/types/academicManagement.type";
-import { TSemester } from "@/types/courseManagement.type";
+
+import { TCourses, TSemester } from "@/types/courseManagement.type";
 import { TQueryParam, TResponseRedux } from "@/types/global";
 
 
@@ -25,6 +25,7 @@ const courseManagementApi = baseApi.injectEndpoints({
                    params: params,
                 };
               },
+              providesTags:['semester'],
               transformResponse: (response: TResponseRedux<TSemester[]>) => {
                 return {
                   data: response.data,
@@ -46,10 +47,47 @@ const courseManagementApi = baseApi.injectEndpoints({
                 url:`/semester-registrations/${args.id}`,
                 method:'PATCH',
                 body:args.data
+            }),
+            invalidatesTags:['semester']
+        }),
+
+        // courses
+            addCourses:builder.mutation({
+            query:(data)=>({
+                url:'/courses/create-course',
+                method:'POST',
+                body:data
             })
-        })
+        }),
+
+        getAllCourses: builder.query({
+
+              query: (args) => {
+                console.log(args);
+                const params = new URLSearchParams();
+        
+                if (args) {
+                  args.forEach((item: TQueryParam) => {
+                    params.append(item.name, item.value as string);
+                  });
+                }
+        
+                return {
+                  url: '/courses',
+                  method: 'GET',
+                   params: params,
+                };
+              },
+              providesTags:['courses'],
+              transformResponse: (response: TResponseRedux<TCourses[]>) => {
+                return {
+                  data: response.data,
+                  meta: response.meta,
+                };
+              },
+            }),
     })
 })
 
 
-export const {useAddRegisteredSemesterMutation,useGetAllRegisteredSemesterQuery,useUpdateSemesterRegistrationMutation} = courseManagementApi;
+export const {useAddRegisteredSemesterMutation,useGetAllRegisteredSemesterQuery,useUpdateSemesterRegistrationMutation,useAddCoursesMutation,useGetAllCoursesQuery} = courseManagementApi;
