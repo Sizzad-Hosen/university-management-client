@@ -13,3 +13,12 @@ export const monthOptions = monthNames.map((month, index) => ({
   value: String(index + 1), // "1" to "12"
   label: month
 }));
+
+
+
+
+export const semesterStatusOptions = [
+  { value: 'UPCOMING', label: 'Upcoming' },
+  { value: 'ONGOING', label: 'Ongoing' },
+  { value: 'ENDED', label: 'Ended' },
+];
