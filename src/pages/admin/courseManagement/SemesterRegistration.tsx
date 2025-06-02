@@ -1,3 +1,5 @@
+"use client"
+
 import FDatePicker from "@/app/components/form/FDatePicker";
 import PHInput from "@/app/components/form/FInput";
 import PHForm from "@/app/components/form/From";
@@ -12,7 +14,9 @@ import { toast } from "sonner";
 
 
 const SemesterRegistration = () => {
+
   const [addSemester] = useAddRegisteredSemesterMutation();
+  
   const { data: academicSemester } = useGetAllSemestersQuery([
     { name: 'sort', value: 'year' },
   ]);

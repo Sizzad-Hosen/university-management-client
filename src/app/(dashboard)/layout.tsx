@@ -81,6 +81,26 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           },
 
           {
+                key: 'Course Management',
+                label: 'CourseManagement',
+                children:[
+
+                 {
+                 key: 'semesterRegistration',
+                 label: <Link href="/admin/semester-registration"> Semesters Registration'</Link>,
+                 },
+                 {
+                 key: 'registeredSemesters',
+                 label: <Link href="/admin/registered-semesters"> Registered Semesters'</Link>,
+                 },
+                
+
+                ]
+              
+          },
+
+
+          {
             key: 'userManagement',
             label: 'User Management',
             children: [
