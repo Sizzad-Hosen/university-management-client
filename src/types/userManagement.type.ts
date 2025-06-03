@@ -61,3 +61,23 @@ export type TLocalGuardian = {
   address: string;
   _id: string;
 };
+
+
+export type TFaculty = {
+  academicFaculty: TAcademicFaculty
+  id: string;
+  user: TUser
+  designation: string;
+  name: TName
+  gender: string
+  dateOfBirth?: Date;
+  email: string;
+  contactNo: string;
+  emergencyContactNo: string;
+  bloogGroup?: string
+  presentAddress: string;
+  permanentAddress: string;
+  profileImg?: string;
+  academicDepartment: TAcademicDepartment
+  isDeleted: boolean;
+};
