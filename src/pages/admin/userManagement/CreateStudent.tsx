@@ -9,6 +9,7 @@ import { bloodGroupOptions, genderOptions } from "@/constant/global";
 import { useGetAllDepartmentQuery, useGetAllSemestersQuery } from "@/redux/features/admin/academicManagement.api";
 import { useAddStudentMutation } from "@/redux/features/admin/usermanagement.api";
 import { Button, Col, Divider, Form, Input, Row } from "antd";
+import dayjs from "dayjs";
 import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -111,37 +112,46 @@ const CreateStudent = () => {
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const toastId = toast.loading("Creating student...");
+  
+  try {
+    // Format date to YYYY-MM-DD
+    const formattedDateOfBirth = data.dateOfBirth 
+      ? dayjs(data.dateOfBirth).format('YYYY-MM-DD') 
+      : undefined;
 
-    const toastId = toast.loading("Creating student...");
+    const studentData = {
+      password: '123456',
+      student: {
+        ...data,
+        dateOfBirth: formattedDateOfBirth, // Use formatted date
+      },
+    };
+
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(studentData));
     
-    try {
-      const studentData = {
-        password: '123456',
-        student: data,
-      };
-
-      const formData = new FormData();
-      formData.append('data', JSON.stringify(studentData));
-      
-      if (data.image) {
-        formData.append('file', data.image);
-      }
-
-      const response = await addStudent(formData).unwrap();
-
-      console.log('response', response.data)
-      
-      if (response.success) {
-        toast.success("Student created successfully!", { id: toastId });
-        console.log("Student created:", response.data);
-      } else {
-        throw new Error(response.message || "Failed to create student");
-      }
-    } catch (error: any) {
-      console.error("Error creating student:", error);
-      toast.error(error?.data?.message || error.message || "Failed to create student", { id: toastId });
+    if (data.image) {
+      formData.append('file', data.image);
     }
-  };
+
+    const response = await addStudent(formData).unwrap();
+    
+    if (response.success) {
+      toast.success("Student created successfully!", { id: toastId });
+    } else {
+      throw new Error(response.message || "Failed to create student");
+    }
+  } catch (error: any) {
+    console.error("Error creating student:", error);
+    toast.error(
+      error?.data?.message || 
+      error.message || 
+      "Failed to create student", 
+      { id: toastId }
+    );
+  }
+};
 
   return (
     <Row justify="center">
