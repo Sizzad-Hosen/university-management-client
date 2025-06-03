@@ -1,14 +1,12 @@
 // /app/(dashboard)/admin/create-student/page.tsx
+import CreateFaculty from '@/pages/admin/userManagement/CreateFaculty';
 import React from 'react';
 
-const CreateFaculty = () => {
+const CreateFacultyPage = () => {
   return (
-    <div>
-      <h1>Create faculty Page</h1>
-      <p>Form for creating faculty will come here.</p>
-    </div>
+  <CreateFaculty></CreateFaculty>
   );
 };
 
-export default CreateFaculty ;
+export default CreateFacultyPage ;
 

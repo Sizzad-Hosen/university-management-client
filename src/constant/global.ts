@@ -13,3 +13,10 @@ export const bloodGroupOptions = bloodGroups.map((item) => ({
   value: item,
   label: item,
 }));
+
+export const designation = ['Professior', 'Associate Prof', 'Assistant Prof', 'Lecturer'];
+
+export const designationOptions = designation.map((item) => ({
+  value: item,
+  label: item,
+}));
