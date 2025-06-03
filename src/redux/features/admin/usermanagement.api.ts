@@ -5,6 +5,7 @@ import { TStudent } from "@/types/userManagement.type";
 const userManagementApi = baseApi.injectEndpoints({
 
     endpoints:(builder)=>({
+
            getAllStudents: builder.query({
       query: (args) => {
         console.log(args);
@@ -35,11 +36,18 @@ const userManagementApi = baseApi.injectEndpoints({
                 method:'POST',
                 body:data,
             })
+        }),
+        addFaculty:builder.mutation({
+            query:(data)=>({
+                url:'/users/create-faculty',
+                method:'POST',
+                body:data,
+            })
         })
     })
 })
 
 
 
-export const {useAddStudentMutation,useGetAllStudentsQuery }= userManagementApi;
+export const {useAddStudentMutation,useGetAllStudentsQuery , useAddFacultyMutation}= userManagementApi;
 

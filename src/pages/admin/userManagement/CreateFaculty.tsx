@@ -1,103 +1,94 @@
 'use client'
-
+import dayjs from 'dayjs'; // Import dayjs properly
 import FDatePicker from "@/app/components/form/FDatePicker";
 import PHInput from "@/app/components/form/FInput";
 import PHForm from "@/app/components/form/From";
 import FSelect from "@/app/components/form/FSelect";
 import { bloodGroupOptions, designationOptions, genderOptions } from "@/constant/global";
 import { useGetAllDepartmentQuery } from "@/redux/features/admin/academicManagement.api";
+import { useAddFacultyMutation } from "@/redux/features/admin/usermanagement.api";
 
 import { Button, Col, Divider, Form, Input, Row } from "antd";
 import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
-
 import { toast } from "sonner";
 
-// const studentDummyData = {
-
-//   password: 'student123',
-//   student: {
-//     name: {
-//       firstName: 'I am ',
-//       middleName: 'Student',
-//       lastName: 'Number 1',
-//     },
-//     gender: 'male',
-//     dateOfBirth: '1990-01-01',
-//     bloogGroup: 'A+',
-
-//     email: 'student3@gmail.com',
-//     contactNo: '1235678',
-//     emergencyContactNo: '987-654-3210',
-//     presentAddress: '123 Main St, Cityville',
-//     permanentAddress: '456 Oak St, Townsville',
-
-//     guardian: {
-//       fatherName: 'James Doe',
-//       fatherOccupation: 'Engineer',
-//       fatherContactNo: '111-222-3333',
-//       motherName: 'Mary Doe',
-//       motherOccupation: 'Teacher',
-//       motherContactNo: '444-555-6666',
-//     },
-
-//     localGuardian: {
-//       name: 'Alice Johnson',
-//       occupation: 'Doctor',
-//       contactNo: '777-888-9999',
-//       address: '789 Pine St, Villageton',
-//     },
-
-//     admissionSemester: '65bb60ebf71fdd1add63b1c0',
-//     academicDepartment: '65b4acae3dc8d4f3ad83e416',
-//   },
-// };
-
-
-
-export const facultyDummyData = 
-  {
-    password:"123456",
-    faculty:{
-    designation: "Lecturer",
-    name: {
+export const facultyDummyData = {
+  designation: "Lecturer",
+  name: {
     firstName: "Emily",
     middleName: "Rose",
     lastName: "Clark"
   },
-
   gender: "female",
-  dateOfBirth: "1990-11-25T00:00:00.000Z",
+  dateOfBirth: dayjs("1990-01-01"), // Use dayjs to create date object
   email: "emily.clark550@university.edu",
   contactNo: "+19876543210",
   emergencyContactNo: "+11234567890",
   bloogGroup: "B-",
   presentAddress: "789 Academic Ave, Knowledge City",
   permanentAddress: "321 Countryside Lane, Smalltown",
-  profileImg: "https://example.com/images/emily-clark.jpg",
-  academicDepartment: "67de7890540f89e762033db7",
-  isDeleted: false
-  
-    }
-  
- 
-}
-
+  academicDepartment: "67de7890540f89e762033db7"
+};
 
 const CreateFaculty = () => {
+  const { data: dData, isLoading: dIsLoading } = useGetAllDepartmentQuery();
+  const [addFaculty] = useAddFacultyMutation();
 
-  const { data: dData, isLoading: dIsLoading } =
-    useGetAllDepartmentQuery();
-
-  const departmentOptions = dData?.data?.map((item: { _id: any; name: any; }) => ({
+  const departmentOptions = dData?.data?.map((item: { _id: string; name: string }) => ({
     value: item._id,
     label: item.name,
   }));
 
-
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Creating faculty...");
+    
+    try {
 
+    const facultyData = {
+      
+      password: '123456', // Default password or could be generated
+      faculty: {
+        designation: data.designation,
+        name: {
+          firstName: data.name.firstName,
+          middleName: data.name.middleName,
+          lastName: data.name.lastName
+        },
+        gender: data.gender,
+        dateOfBirth: data.dateOfBirth ? data.dateOfBirth.toISOString() : null,
+        email: data.email,
+        contactNo: data.contactNo,
+        emergencyContactNo: data.emergencyContactNo,
+        bloogGroup: data.bloogGroup,
+        presentAddress: data.presentAddress,
+        permanentAddress: data.permanentAddress,
+        academicDepartment: data.academicDepartment,
+        profileImg: data.image ? data.image.name : undefined
+      }
+    };
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(facultyData));
+      
+      if (data.image) {
+        formData.append('file', data.image);
+      }
 
-
+      const res = await addFaculty(formData).unwrap();
+  
+      if (res.success) {
+        toast.success("Faculty created successfully!", { id: toastId });
+      } else {
+        throw new Error(res.message || "Failed to create faculty");
+      }
+    } catch (err: any) {
+      console.error("Error creating faculty:", err);
+      toast.error(
+        err?.data?.message || 
+        err.message || 
+        "Failed to create faculty", 
+        { id: toastId }
+      );
+    }
   };
 
   return (
@@ -128,7 +119,6 @@ const CreateFaculty = () => {
                 label="Blood group"
               />
             </Col>
-
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <FSelect
                 options={designationOptions}
@@ -136,7 +126,6 @@ const CreateFaculty = () => {
                 label="Designation"
               />
             </Col>
-
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <Controller
                 name="image"
@@ -183,12 +172,8 @@ const CreateFaculty = () => {
               />
             </Col>
           </Row>
-
-          
           <Divider>Academic Info.</Divider>
-
           <Row gutter={8}>
-        
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <FSelect
                 options={departmentOptions}
@@ -198,12 +183,10 @@ const CreateFaculty = () => {
               />
             </Col>
           </Row>
-
           <Button htmlType="submit">Submit</Button>
         </PHForm>
       </Col>
     </Row>
-
   );
 };
 
