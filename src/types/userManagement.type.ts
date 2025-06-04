@@ -64,6 +64,7 @@ export type TLocalGuardian = {
 
 
 export type TFaculty = {
+  fullName: any;
   _id: any;
   academicFaculty: TAcademicFaculty
   id: string;

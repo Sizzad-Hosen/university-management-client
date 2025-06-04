@@ -1,9 +1,10 @@
 "use client"
 import PHForm from '@/app/components/form/From';
 import FSelect from '@/app/components/form/FSelect';
-import { useAddAcademicFacultyMutation, useGetAllFacultyQuery } from '@/redux/features/admin/academicManagement.api';
-import { useAddFacultiesMutation, useGetAllCoursesQuery } from '@/redux/features/admin/courseManagement.api';
-import { Button, Modal, Table } from 'antd';
+
+import { useAddFacultyMutation, useGetAllCoursesQuery } from '@/redux/features/admin/courseManagement.api';
+import { useGetAllFacultiesQuery } from '@/redux/features/admin/usermanagement.api';
+import { Button, message, Modal, Table } from 'antd';
 import { useState } from 'react';
 
 const Courses = () => {
@@ -64,9 +65,9 @@ const AddFacultyModal = ({ facultyInfo }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: facultiesData } = useGetAllFacultyQuery(undefined);
+  const { data: facultiesData } = useGetAllFacultiesQuery(undefined);
 
-  const [addFaculties] = useAddFacultiesMutation();
+  const [addFaculties] =  useAddFacultyMutation();
 
   const facultiesOption = facultiesData?.data?.map((item) => ({
 
@@ -75,16 +76,40 @@ const AddFacultyModal = ({ facultyInfo }) => {
 
   }));
 
-  const handleSubmit = (data: any) => {
-    const facultyData = {
+const handleSubmit = async (data: { faculties: string[] }) => {
+
+  try {
+
+
+    // Ensure faculties is always an array
+    const facultiesArray = Array.isArray(data.faculties) 
+      ? data.faculties 
+      : [data.faculties];
+
+    // Prepare the payload in correct format
+    const payload = {
+      
       courseId: facultyInfo.key,
-      data,
+      data: {
+        faculties: facultiesArray
+
+      }
+      
     };
 
-    console.log(facultyData);
+    console.log('Submitting:', payload); // Debug log
 
-    addFaculties(facultyData);
-  };
+    await addFaculties(payload).unwrap();
+
+    message.success('Faculties assigned successfully');
+    
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error('Assignment failed:', error);
+    message.error('Failed to assign faculties');
+  }
+
+};
 
   const showModal = () => {
     setIsModalOpen(true);
