@@ -6,7 +6,7 @@ import PHForm from "@/app/components/form/From";
 import FSelect from "@/app/components/form/FSelect";
 import { bloodGroupOptions, designationOptions, genderOptions } from "@/constant/global";
 import { useGetAllDepartmentQuery } from "@/redux/features/admin/academicManagement.api";
-import { useAddFacultyMutation } from "@/redux/features/admin/usermanagement.api";
+import { useAddFacultiesMutation, useAddFacultyMutation } from "@/redux/features/admin/usermanagement.api";
 
 import { Button, Col, Divider, Form, Input, Row } from "antd";
 import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
@@ -32,7 +32,8 @@ export const facultyDummyData = {
 
 const CreateFaculty = () => {
   const { data: dData, isLoading: dIsLoading } = useGetAllDepartmentQuery();
-  const [addFaculty] = useAddFacultyMutation();
+  const [addFaculty] = useAddFacultiesMutation();
+  
 
   const departmentOptions = dData?.data?.map((item: { _id: string; name: string }) => ({
     value: item._id,

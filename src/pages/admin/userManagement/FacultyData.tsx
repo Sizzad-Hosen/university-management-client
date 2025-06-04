@@ -1,94 +1,97 @@
 'use client'
-import { useGetAllStudentsQuery } from '@/redux/features/admin/usermanagement.api';
+import { useGetAllFacultiesQuery } from '@/redux/features/admin/usermanagement.api';
 import { TQueryParam } from '@/types/global';
-import { TStudent } from '@/types/userManagement.type';
-import {
-  Button,
-  Pagination,
-  Space,
-  Table,
-  TableColumnsType,
-  TableProps,
-} from 'antd';
+import { TFaculty } from '@/types/userManagement.type';
+import { Button, Pagination, Space, Table, TableColumnsType, TableProps } from 'antd';
 import Link from 'next/link';
 import { useState } from 'react';
 
-
-export type TTableData = Pick<
-  TStudent,
-  'fullName' | 'id' | 'email' | 'contactNo'
->;
+// Define the table data type based on TFaculty
+export type TFacultyTableData = {
+  key: string; // Required for Ant Table
+  id: string;
+  name: string; // Combined from name.firstName, name.middleName, name.lastName
+  email: string;
+  contactNo: string;
+  designation: string;
+  department: string; // From academicDepartment
+};
 
 const FacultyData = () => {
-    
   const [params, setParams] = useState<TQueryParam[]>([]);
   const [page, setPage] = useState(1);
-  const {
-    data: studentData,
-    isLoading,
+  
+  const { 
+    data: facultyData, 
+    isLoading, 
     isFetching,
-  } = useGetAllStudentsQuery([
+    error 
+  } = useGetAllFacultiesQuery([
     { name: 'page', value: page },
     { name: 'sort', value: 'id' },
     ...params,
   ]);
 
-  console.log({ isLoading, isFetching });
+  console.log(facultyData)
 
-  const metaData = studentData?.meta;
+  // Transform faculty data for the table
+  const tableData: TFacultyTableData[] = facultyData?.data?.map((faculty) => ({
+    key: faculty._id, // Using _id as key
+    id: faculty.id,
+    name: `${faculty.name?.firstName} ${faculty.name?.middleName || ''} ${faculty.name?.lastName}`.trim(),
+    email: faculty.email,
+    contactNo: faculty.contactNo,
+    designation: faculty.designation,
+    department: faculty.academicDepartment?.name || 'N/A'
+  })) || [];
 
-  const tableData = studentData?.data?.map(
-    ({ _id, fullName, id, email, contactNo }) => ({
-      key: _id,
-      fullName,
-      id,
-      email,
-      contactNo,
-    })
-  );
-
-  const columns: TableColumnsType<TTableData> = [
+  const columns: TableColumnsType<TFacultyTableData> = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
     {
       title: 'Name',
+      dataIndex: 'name',
       key: 'name',
-      dataIndex: 'fullName',
-    },
-
-    {
-      title: 'Roll No.',
-      key: 'id',
-      dataIndex: 'id',
     },
     {
       title: 'Email',
-      key: 'email',
       dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: 'Contact No.',
-      key: 'contactNo',
+      title: 'Contact',
       dataIndex: 'contactNo',
+      key: 'contactNo',
+    },
+    {
+      title: 'Designation',
+      dataIndex: 'designation',
+      key: 'designation',
+    },
+    {
+      title: 'Department',
+      dataIndex: 'department',
+      key: 'department',
     },
     {
       title: 'Action',
-      key: 'x',
-      render: (item) => {
-        console.log(item);
-        return (
-          <Space>
-            <Link href={`/admin/student-data/${item.key}`}>
-              <Button>Details</Button>
-            </Link>
-            <Button>Update</Button>
-            <Button>Block</Button>
-          </Space>
-        );
-      },
-      width: '1%',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <Link href={`/admin/faculty-data/${record.key}`}>
+            <Button size="small">Details</Button>
+          </Link>
+          <Button size="small">Update</Button>
+          <Button size="small" danger>Block</Button>
+        </Space>
+      ),
     },
   ];
 
-  const onChange: TableProps<TTableData>['onChange'] = (
+  const onChange: TableProps<TFacultyTableData>['onChange'] = (
     _pagination,
     filters,
     _sorter,
@@ -96,35 +99,45 @@ const FacultyData = () => {
   ) => {
     if (extra.action === 'filter') {
       const queryParams: TQueryParam[] = [];
-
-      filters.name?.forEach((item) =>
-        queryParams.push({ name: 'name', value: item })
-      );
-
-      filters.year?.forEach((item) =>
-        queryParams.push({ name: 'year', value: item })
-      );
+      
+      if (filters.designation) {
+        queryParams.push({ name: 'designation', value: filters.designation.join(',') });
+      }
+      
+      if (filters.department) {
+        queryParams.push({ name: 'academicDepartment', value: filters.department.join(',') });
+      }
 
       setParams(queryParams);
     }
   };
 
+  if (error) {
+    return <div>Error loading faculty data</div>;
+  }
+
   return (
-    <>
+    <div className="p-4">
       <Table
-        loading={isFetching}
+        loading={isLoading || isFetching}
         columns={columns}
         dataSource={tableData}
         onChange={onChange}
         pagination={false}
+        bordered
+        size="middle"
+        scroll={{ x: true }}
       />
-      <Pagination
-        current={page}
-        onChange={(value) => setPage(value)}
-        pageSize={metaData?.limit}
-        total={metaData?.total}
-      />
-    </>
+      <div className="mt-4 flex justify-end">
+        <Pagination
+          current={page}
+          onChange={setPage}
+          pageSize={facultyData?.meta?.limit}
+          total={facultyData?.meta?.total}
+          showSizeChanger={false}
+        />
+      </div>
+    </div>
   );
 };
 

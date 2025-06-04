@@ -64,11 +64,12 @@ export type TLocalGuardian = {
 
 
 export type TFaculty = {
+  _id: any;
   academicFaculty: TAcademicFaculty
   id: string;
   user: TUser
   designation: string;
-  name: TName
+  name: TName;
   gender: string
   dateOfBirth?: Date;
   email: string;
