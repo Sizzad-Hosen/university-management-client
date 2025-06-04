@@ -7,7 +7,7 @@ import { TQueryParam, TResponseRedux } from "@/types/global";
 const courseManagementApi = baseApi.injectEndpoints({
     endpoints:(builder)=>({
 
-                  getAllRegisteredSemester: builder.query({
+            getAllRegisteredSemester: builder.query({
 
               query: (args) => {
                 console.log(args);
@@ -60,6 +60,36 @@ const courseManagementApi = baseApi.injectEndpoints({
             })
         }),
 
+        
+        getAllCourses: builder.query({
+          
+          query: (args) => {
+            
+            console.log(args);
+            
+            const params = new URLSearchParams();
+            
+            if (args) {
+              args.forEach((item: TQueryParam) => {
+                params.append(item.name, item.value as string);
+              });
+            }
+            
+            return {
+              url: '/courses',
+              method: 'GET',
+              params: params,
+            };
+          },
+          
+          providesTags:['courses'],
+          transformResponse: (response: TResponseRedux<TCourses[]>) => {
+            return {
+              data: response.data,
+              meta: response.meta,
+            };
+          },
+        }),
         // add faculties
             addFaculty:builder.mutation({
             query:(args)=>({
@@ -70,37 +100,35 @@ const courseManagementApi = baseApi.injectEndpoints({
             
         }),
 
-        getAllCourses: builder.query({
+          getCourseFaculty: builder.query({
+        query: (id) => {
+        return {
+          url: `/courses/${id}/get-faculties`,
+          method: 'GET',
+        };
+      },
+      transformResponse: (response: TResponseRedux<any>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
 
-              query: (args) => {
+    // offered course
+          addOfferCourse:builder.mutation({
+            query:(data)=>({
+              url:'/offered-course/create-offered-course',
+              method:'POST',
+              body:data
+            })
+            
+        }),
 
-                console.log(args);
 
-                const params = new URLSearchParams();
-        
-                if (args) {
-                  args.forEach((item: TQueryParam) => {
-                    params.append(item.name, item.value as string);
-                  });
-                }
-        
-                return {
-                  url: '/courses',
-                  method: 'GET',
-                   params: params,
-                };
-              },
 
-              providesTags:['courses'],
-              transformResponse: (response: TResponseRedux<TCourses[]>) => {
-                return {
-                  data: response.data,
-                  meta: response.meta,
-                };
-              },
-            }),
     })
 })
 
 
-export const {useAddRegisteredSemesterMutation,useGetAllRegisteredSemesterQuery,useUpdateSemesterRegistrationMutation,useAddCoursesMutation,useGetAllCoursesQuery,useAddFacultyMutation} = courseManagementApi;
+export const {useAddRegisteredSemesterMutation,useGetCourseFacultyQuery,useGetAllRegisteredSemesterQuery,useUpdateSemesterRegistrationMutation,useAddCoursesMutation,useGetAllCoursesQuery,useAddFacultyMutation,useAddOfferCourseMutation} = courseManagementApi;
