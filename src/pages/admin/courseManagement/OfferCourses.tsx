@@ -5,6 +5,7 @@ import PHForm from '@/app/components/form/From';
 import FSelect from '@/app/components/form/FSelect';
 import FSelectWithWatch from '@/app/components/form/FSelectPropsWithWatch';
 import FTimePicker from '@/app/components/form/FTimePicker';
+import { weekDaysOptions } from '@/constant/global';
 import { useGetAllDepartmentQuery, useGetAllFacultyQuery } from '@/redux/features/admin/academicManagement.api';
 import { useAddOfferCourseMutation, useGetAllCoursesQuery, useGetAllRegisteredSemesterQuery, useGetCourseFacultyQuery } from '@/redux/features/admin/courseManagement.api';
 import { Button, Col, Flex } from 'antd';
@@ -14,6 +15,7 @@ import { FieldValues, SubmitHandler } from 'react-hook-form';
 
 
 const OfferCourse = () => {
+
   const [courseId, setCourseId] = useState('');
 
   const [addOfferedCourse] = useAddOfferCourseMutation();
@@ -21,7 +23,10 @@ const OfferCourse = () => {
   const { data: semesterRegistrationData } = useGetAllRegisteredSemesterQuery([
     { name: 'sort', value: 'year' },
     { name: 'status', value: 'UPCOMING' },
+
   ]);
+
+  console.log('semester data',semesterRegistrationData)
 
   const { data: academicFacultyData } = useGetAllFacultyQuery(undefined);
 
@@ -31,12 +36,22 @@ const OfferCourse = () => {
   const { data: coursesData } = useGetAllCoursesQuery(undefined);
 
   const { data: facultiesData, isFetching: fetchingFaculties } =
+
     useGetCourseFacultyQuery(courseId, { skip: !courseId });
 
+ console.log('courseeID',courseId)
+
+    console.log('courseFaculty data', facultiesData);
+
+
   const semesterRegistrationOptions = semesterRegistrationData?.data?.map(
+
     (item) => ({
+
       value: item._id,
+
       label: `${item.academicSemester.name} ${item.academicSemester.year}`,
+
     })
   );
 
@@ -44,6 +59,8 @@ const OfferCourse = () => {
     value: item._id,
     label: item.name,
   }));
+
+
 
   const academicDepartmentOptions = academicDepartmentData?.data?.map(
     (item) => ({
@@ -62,18 +79,27 @@ const OfferCourse = () => {
     label: item.fullName,
   }));
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const offeredCourseData = {
-      ...data,
-      maxCapacity: Number(data.maxCapacity),
-      section: Number(data.section),
-      startTime: moment(new Date(data.startTime)).format('HH:mm'),
-      endTime: moment(new Date(data.endTime)).format('HH:mm'),
-    };
+ const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  // Ensure `days` is an array
+  const daysArray = Array.isArray(data.days)
+    ? data.days
+    : typeof data.days === 'string'
+    ? data.days.split(',').map(day => day.trim())
+    : [];
 
-    const res = await addOfferedCourse(offeredCourseData);
-    console.log(res);
+  const offeredCourseData = {
+    ...data,
+    days: daysArray, // ✅ updated
+    maxCapacity: Number(data.maxCapacity),
+    section: Number(data.section),
+    startTime: moment(new Date(data.startTime)).format('HH:mm'),
+    endTime: moment(new Date(data.endTime)).format('HH:mm'),
   };
+
+  const res = await addOfferedCourse(offeredCourseData);
+
+  console.log(res);
+};
 
   return (
     <Flex justify="center" align="center">

@@ -100,7 +100,7 @@ const courseManagementApi = baseApi.injectEndpoints({
             
         }),
 
-          getCourseFaculty: builder.query({
+        getCourseFaculty: builder.query({
         query: (id) => {
         return {
           url: `/courses/${id}/get-faculties`,

@@ -76,39 +76,40 @@ const AddFacultyModal = ({ facultyInfo }) => {
 
   }));
 
+
 const handleSubmit = async (data: { faculties: string[] }) => {
-
   try {
-
-
-    // Ensure faculties is always an array
-    const facultiesArray = Array.isArray(data.faculties) 
-      ? data.faculties 
+    const facultiesArray = Array.isArray(data.faculties)
+      ? data.faculties
       : [data.faculties];
 
-    // Prepare the payload in correct format
     const payload = {
-      
       courseId: facultyInfo.key,
       data: {
-        faculties: facultiesArray
-
-      }
-      
+        faculties: facultiesArray,
+      },
     };
 
-    console.log('Submitting:', payload); // Debug log
+    console.log('Submitting:', payload);
 
     await addFaculties(payload).unwrap();
 
-    message.success('Faculties assigned successfully');
-    
+    message.success({
+      content: '🎉 Faculties assigned successfully!',
+      duration: 2,
+    });
+
+    // Optionally reset form or refresh
     setIsModalOpen(false);
+
   } catch (error) {
     console.error('Assignment failed:', error);
-    message.error('Failed to assign faculties');
-  }
 
+    message.error({
+      content: '❌ Failed to assign faculties',
+      duration: 3,
+    });
+  }
 };
 
   const showModal = () => {
