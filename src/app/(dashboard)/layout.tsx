@@ -141,6 +141,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             ],
           },
         ];
+
       case userRole?.STUDENT:
         return [
           {
@@ -170,6 +171,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           }
         
         ];
+
       case userRole?.FACULTY:
         return [
           {
@@ -241,7 +243,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   <div className="flex justify-end p-4">
     <button
       onClick={handleLogout}
-      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+      className="bg-blue-600 btn btn text-white p-2  rounded-md hover:bg-blue-700 transition duration-300"
     >
       Logout
     </button>

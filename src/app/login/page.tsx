@@ -45,7 +45,15 @@ const Login = () => {
 
       toast.success('Logged in', { id: toastId });
 
-      router.push(`/${user.role}/dashboard`);
+      if(res?.data?.needsPasswordChange)
+      {
+        router.push("/change-password")
+      }
+      else{
+
+        router.push(`/${user.role}/dashboard`);
+      }
+
       
     } catch (err) {
       toast.error('Login failed', { id: toastId });
