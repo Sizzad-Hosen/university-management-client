@@ -153,6 +153,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               key: 'offeredCourse',
               label: <Link href="/student/offered-course">Offered Course</Link>,
           },
+          {
+              key: 'mySchedule',
+              label: <Link href="/student/schedule">My Schedule</Link>,
+          },
         //     children: [
         //       {
         //       key: 'myCourses',
@@ -178,27 +182,35 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             key: 'dashboard',
             label: <Link href="faculty/dashboard">Dashboard</Link>,
           },
+          {
+            key: 'MyCourses',
+            label: <Link href="faculty/courses">My Courses</Link>,
+          },
+          {
+            key: 'MyStudent',
+            label: <Link href="faculty/my-student">My Student</Link>,
+          },
 
             
-          {
-            key: 'offercourse',
-            label: 'OfferCourse',
+          // {
+          //   key: 'offercourse',
+          //   label: 'OfferCourse',
 
-            children: [
-              {
-                key: 'myClasses',
-                label: <Link href="/faculty/my-classes">My Classes</Link>,
-              },
-              {
-                key: 'gradeStudents',
-                label: <Link href="/faculty/grade-students">Grade Students</Link>,
-              },
-              {
-                key: 'profile',
-                label: <Link href="faculty/profile">Profile</Link>,
-              },
-            ]
-          }
+          //   children: [
+          //     {
+          //       key: 'myClasses',
+          //       label: <Link href="/faculty/my-classes">My Classes</Link>,
+          //     },
+          //     {
+          //       key: 'gradeStudents',
+          //       label: <Link href="/faculty/grade-students">Grade Students</Link>,
+          //     },
+          //     {
+          //       key: 'profile',
+          //       label: <Link href="faculty/profile">Profile</Link>,
+          //     },
+          //   ]
+          // }
           
         ];
       default:

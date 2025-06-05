@@ -72,5 +72,7 @@ const studentCourseApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllOfferedCoursesQuery,
+  useEnrolCourseMutation,
+  useGetAllEnrolledCoursesQuery
 
 } = studentCourseApi;

@@ -1,0 +1,44 @@
+import { baseApi } from "@/redux/api/baseApi";
+import { TQueryParam, TResponseRedux } from "@/types/global";
+
+
+const facultyCourseApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    
+    getAllFacultyCourses: builder.query({
+      query: (args) => {
+        console.log(args);
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item: TQueryParam) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+        return {
+          url: '/enrolled-courses',
+          method: 'GET',
+          params: params,
+        };
+      },
+      providesTags: ['offeredCourse'],
+      transformResponse: (response: TResponseRedux<any>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
+
+    addMark: builder.mutation({
+      query: (data) => ({
+        url: '/enrolled-courses/update-enrolled-course-marks',
+        method: 'PATCH',
+        body: data,
+      }),
+    }),
+  }),
+});
+
+export const { useGetAllFacultyCoursesQuery, useAddMarkMutation } =
+  facultyCourseApi;
