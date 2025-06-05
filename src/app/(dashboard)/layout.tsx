@@ -150,28 +150,28 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           },
           
           {
-            key: 'offercourse',
-            label: 'OfferCourse',
+              key: 'offeredCourse',
+              label: <Link href="/student/offered-course">Offered Course</Link>,
+          },
+        //     children: [
+        //       {
+        //       key: 'myCourses',
+        //       label: <Link href="/student/my-courses">My Courses</Link>,
+        //     },
 
-            children: [
-              {
-              key: 'myCourses',
-              label: <Link href="/student/my-courses">My Courses</Link>,
-            },
-
-              {
-                key: 'results',
-                label: <Link href="/student/results">My Results</Link>,
-              },
-              {
-                key: 'profile',
-                label: <Link href="/profile">Profile</Link>,
-              },
-            ]
-          }
+        //       {
+        //         key: 'results',
+        //         label: <Link href="/student/results">My Results</Link>,
+        //       },
+        //       {
+        //         key: 'profile',
+        //         label: <Link href="/profile">Profile</Link>,
+        //       },
+        //     ]
+        //   }
         
-        ];
-
+        // ];
+        ]
       case userRole?.FACULTY:
         return [
           {

@@ -11,6 +11,8 @@ const OfferedCourse = () => {
 
   const { data: offeredCourseData } = useGetAllOfferedCoursesQuery(undefined);
 
+  console.log('offered course data',offeredCourseData)
+  
   const singleObject = offeredCourseData?.data?.reduce((acc: TCourse, item) => {
 
     const key = item.course.title;
