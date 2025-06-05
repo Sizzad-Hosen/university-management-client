@@ -10,6 +10,7 @@ const baseQuery = fetchBaseQuery({
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
+    
     return headers;
   },
 });
@@ -24,6 +25,8 @@ const baseQueryWithRefreshToken = async (args: any, api: any, extraOptions: any)
       api,
       extraOptions
     );
+    console.log('Current token:', (api.getState() as RootState).auth.token);
+console.log('Refresh result:', refreshResult);
 
     if (refreshResult.data) {
       const { data } = refreshResult.data as { data?: { accessToken: string } };

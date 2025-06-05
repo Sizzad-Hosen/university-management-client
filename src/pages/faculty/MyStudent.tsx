@@ -16,6 +16,7 @@ interface StudentInfo {
   offeredCourse: string;
 }
 
+
 const AddMarksModal = ({ studentInfo }: { studentInfo: StudentInfo }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addMark] = useAddMarkMutation();
@@ -65,9 +66,9 @@ const AddMarksModal = ({ studentInfo }: { studentInfo: StudentInfo }) => {
   );
 };
 
-const MyStudents = () => {
+const MyStudents = ({params}) => {
     
-  const params = useParams();
+  // const params = useParams();
   const registerSemesterId = params.registerSemesterId as string;
   const courseId = params.courseId as string;
 

@@ -12,6 +12,9 @@ const MyCourses = () => {
   const { data: facultyCoursesData } = useGetAllFacultyCoursesQuery(undefined);
   const router = useRouter();
 
+
+  console.log('data', facultyCoursesData)
+  
   const semesterOptions = facultyCoursesData?.data?.map((item: any) => ({
     label: `${item.academicSemester?.name} ${item.academicSemester?.year}`,
     value: item.semesterRegistration._id,
@@ -23,7 +26,9 @@ const MyCourses = () => {
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+
     router.push(`/faculty/courses/${data.semesterRegistration}/${data.course}`);
+ 
   };
 
   return (

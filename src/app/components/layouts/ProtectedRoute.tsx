@@ -1,18 +1,18 @@
 "use client"
-import { logout, useCurrentToken } from '@/redux/features/auth/authSlice';
+import { logout, selectCurrentToken } from '@/redux/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { verifyToken } from '@/utils/verifyToken';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
-type TProtectedRoute = {
+export type TProtectedRoute = {
   children: ReactNode;
   role: string | undefined;
 };
 
 const ProtectedRoute = ({ children, role }: TProtectedRoute) => {
 
-  const token = useAppSelector(useCurrentToken);
+  const token = useAppSelector(selectCurrentToken);
 
   let user;
 

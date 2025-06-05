@@ -4,7 +4,7 @@ import React from 'react';
 import { Layout, Menu, theme } from 'antd';
 
 import type { MenuProps } from 'antd';
-import { logout, useCurrentUser } from '@/redux/features/auth/authSlice';
+import { logout, selectCurrentUser} from '@/redux/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import Link from 'next/link';
 
@@ -31,7 +31,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const user = useAppSelector(useCurrentUser);
+  const user = useAppSelector(selectCurrentUser);
 
   console.log('current user', user);
 
@@ -176,22 +176,22 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         
         // ];
         ]
+
       case userRole?.FACULTY:
         return [
           {
             key: 'dashboard',
-            label: <Link href="faculty/dashboard">Dashboard</Link>,
+            label: <Link href="/dashboard">Dashboard</Link>,
           },
           {
-            key: 'MyCourses',
-            label: <Link href="faculty/courses">My Courses</Link>,
+            key: 'myCourses',
+            label: <Link href="/faculty/courses">My Courses</Link>,
           },
-          {
-            key: 'MyStudent',
-            label: <Link href="faculty/my-student">My Student</Link>,
-          },
+          
 
-            
+        ]
+
+
           // {
           //   key: 'offercourse',
           //   label: 'OfferCourse',
@@ -212,7 +212,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           //   ]
           // }
           
-        ];
+        
       default:
         return [
           {
