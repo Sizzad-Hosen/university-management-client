@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Layout, Menu, theme } from 'antd';
+import { Button, Layout, Menu, theme } from 'antd';
 
 import type { MenuProps } from 'antd';
 import { logout, selectCurrentUser} from '@/redux/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import Link from 'next/link';
+import Image from 'next/image';
+import Home from '../components/Home/Home';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -25,6 +27,8 @@ export const userRole:role = {
 } as const;
 
 export type Role = keyof typeof userRole; // "ADMIN" | "STUDENT" | "FACULTY"
+
+
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -217,12 +221,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         return [
           {
             key: 'dashboard',
-            label: <Link href="/dashboard">Dashboard</Link>,
+            label: <Link href="/">Home</Link>,
           },
           {
             key: 'about',
             label: <Link href="/about">About</Link>,
           },
+          {
+            key:'login',
+            label: <Link href="/login">Login</Link>,
+          },
+
         ];
     }
   };
@@ -242,23 +251,34 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <Sider breakpoint="lg" collapsedWidth="0">
         <div className="demo-logo-vertical" />
         <h1 className="ps-4 p-2 text-white">
-          <Link href={"/"}>
-          PH UNI
-          </Link>
-          
+           <Link href={"/"}>
+          <Image 
+          width={130}
+          height={60}
+          alt="brur"
+          className='ps-10 p-2 text-3xl'
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/BRUR_Logo.svg/640px-BRUR_Logo.svg.png" />
+        
+        </Link>
+
           </h1>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['dashboard']} items={items} />
-      </Sider>
+      
+        </Sider>
 
-      <Layout>
-      <Header style={{ padding: 0, background: colorBgContainer }}>
-  <div className="flex justify-end p-4">
-    <button
+       <Layout>
+
+       <Header style={{ padding: 0, background: colorBgContainer }}>
+
+   <div className="flex justify-end p-4">
+  
+  
+      <Button
       onClick={handleLogout}
-      className="bg-blue-600 btn btn text-white p-2  rounded-md hover:bg-blue-700 transition duration-300"
-    >
-      Logout
-    </button>
+       type="primary" size={20}>
+            Logout
+          </Button>
+
   </div>
 </Header>
 
@@ -273,11 +293,20 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               borderRadius: borderRadiusLG,
             }}
           >
+            {
+              !user==true?  <Home></Home> : []
+            }
+           
+
             {children} {/* 🔥 Dynamic page */}
+
+
           </div>
         </Content>
+
+
         <Footer style={{ textAlign: 'center' }}>
-          PH University ©{new Date().getFullYear()} Created by PH
+          ©{new Date().getFullYear()} Created by  Md Sizzad Hosen
         </Footer>
       </Layout>
     </Layout>

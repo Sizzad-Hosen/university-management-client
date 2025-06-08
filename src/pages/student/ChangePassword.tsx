@@ -10,6 +10,7 @@ import { compose } from '@reduxjs/toolkit';
 import { Button, Row, message } from 'antd';
 import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
+import { toast } from 'sonner';
   
 
 const ChangePassword = () => {
@@ -26,6 +27,9 @@ const ChangePassword = () => {
 
 
 const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+
+    const toastId = toast.loading('Logging in...');
+
   try {
     console.log('data',data)
 
@@ -35,6 +39,8 @@ const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     }).unwrap();
 
     console.log('result',result)
+
+      toast.success('Waiting for password change...', { id: toastId });
 
     if (result.success) {
       message.success('Password changed!');
