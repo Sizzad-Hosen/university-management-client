@@ -220,8 +220,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             label: <Link href="/dashboard">Dashboard</Link>,
           },
           {
-            key: 'profile',
-            label: <Link href="/profile">Profile</Link>,
+            key: 'about',
+            label: <Link href="/about">About</Link>,
           },
         ];
     }

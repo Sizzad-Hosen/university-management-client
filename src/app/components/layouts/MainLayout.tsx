@@ -13,26 +13,15 @@ const items: MenuProps['items'] = [
   },
   {
     key: 'profile',
-    label: <Link href="/profile">Profile</Link>,
+    label: <Link href="/about">About</Link>,
   },
   {
-    key: 'userManagement',
-    label: 'User Management',
-    children: [
-      {
-        key: 'createAdmin',
-        label: <Link href="/admin/create-admin">Create Admin</Link>,
-      },
-      {
-        key: 'createStudent',
-        label: <Link href="/admin/create-student">Create Student</Link>,
-      },
-      {
-        key: 'createFaculty',
-        label: <Link href="/admin/create-faculty">Create Faculty</Link>,
-      },
-    ],
+    key:'login',
+     label: <Link href="/login">Login</Link>,
   },
+ 
+ 
+  
 ];
 
 const App: React.FC = () => {
