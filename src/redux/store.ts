@@ -16,7 +16,7 @@ import { persistStore } from 'redux-persist';
 const persistConfig = {
   key: 'auth',
   storage,
-  whitelist: ['token', 'user'] // Explicitly persist both token and user
+  whitelist: ['token', 'user']
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
@@ -34,8 +34,13 @@ export const store = configureStore({
     }).concat(baseApi.middleware),
 });
 
-// Infer the RootState and AppDispatch types
+export const persistor = persistStore(store);
+
+// Add debug logging
+persistor.subscribe(() => {
+  const { bootstrapped } = persistor.getState();
+  console.log('Persistor bootstrapped:', bootstrapped);
+});
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
-export const persistor = persistStore(store);

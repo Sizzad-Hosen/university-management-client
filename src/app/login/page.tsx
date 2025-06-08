@@ -12,7 +12,7 @@ import PHForm from '../components/form/From';
 import PHInput from '../components/form/FInput';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import Image from 'next/image';
+
 
 const Login = () => {
   const router = useRouter();
@@ -36,9 +36,22 @@ const Login = () => {
       };
 
       const res = await login(userInfo).unwrap();
+
+      const token = res?.data?.accessToken;
+
+      
       const user = verifyToken(res.data.accessToken) as TUser;
 
-      dispatch(setUser({ user, token: res.data.accessToken }));
+      if (!user) {
+      throw new Error('Invalid token');
+}
+      dispatch(setUser({ user, token }));
+      
+      console.log('user',user);
+
+      console.log('token',token);
+      
+
       toast.success('Logged in', { id: toastId });
 
       if(res?.data?.needsPasswordChange) {
@@ -69,7 +82,7 @@ const Login = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md px-8 py-10   border-blue-500 bg-white bg-opacity-90 rounded-2xl shadow-xl backdrop-blur-sm border border-opacity-20 "
+          className="w-full max-w-md px-8 py-10  border-2  border-blue-500 bg-white bg-opacity-90 rounded-2xl shadow-xl backdrop-blur-sm border border-opacity-20 "
         >
           <div className="text-center mb-8">
             <motion.h1 
@@ -78,9 +91,10 @@ const Login = () => {
               transition={{ delay: 0.2 }}
               className="text-3xl font-bold text-gray-800 mb-2"
             >
-              Welcome Back
+              <span className='text-cyan-500 font-extrabold'>Welcome </span>
+               Back
             </motion.h1>
-            <p className="text-gray-600">Sign in to continue your journey</p>
+            <p className="text-pink-500 text-2xl">Sign in to continue your journey</p>
           </div>
 
           <PHForm onSubmit={onSubmit} defaultValues={defaultValues}>
@@ -138,7 +152,7 @@ const Login = () => {
             transition={{ delay: 0.6 }}
             className="mt-6 text-center text-sm text-gray-600"
           >
-            <p>Don't have an account? <a href="#" className="text-blue-600 hover:underline font-medium">Contact admin</a></p>
+            <p>Don't have an account? <a href="#" className="text-cyan-500 hover:underline font-medium">Contact admin</a></p>
           </motion.div>
         </motion.div>
       </div>

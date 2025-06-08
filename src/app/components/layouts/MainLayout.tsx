@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { MenuProps } from 'antd';
 
 import Home from '../Home/Home';
+import Image from 'next/image';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -35,8 +36,22 @@ const App: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider breakpoint="lg" collapsedWidth="0">
         <div className="demo-logo-vertical" />
-        <h1 className="ps-4 p-2 text-white">BRUR</h1>
+
+        <Link href={"/"}>
+          <Image 
+      width={130}
+      height={60}
+      alt="brur"
+      className='ps-10 p-2 text-3xl'
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/BRUR_Logo.svg/640px-BRUR_Logo.svg.png" mode=""/>
+       
+        
+        </Link>
+
+    
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['dashboard']} items={items} />
+    
+    
       </Sider>
 
       <Layout>
@@ -51,6 +66,7 @@ const App: React.FC = () => {
             }}
           >
          <Home></Home>
+
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>

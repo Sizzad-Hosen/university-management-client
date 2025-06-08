@@ -70,16 +70,23 @@ const userManagementApi = baseApi.injectEndpoints({
                 body:data,
             })
         }),
-// password chnage
-        changePassword: builder.mutation({
-      query: (data) => ({
-        url: '/auth/change-password',
-        method: 'POST',
-        body: data,
-      }),
-    }),
+
+      // password chnage
+    changePassword: builder.mutation({
+    query: ({ oldPassword, newPassword }) => ({
+    url: '/auth/change-password',
+    method: 'POST',
+    body: { oldPassword, newPassword }, // Fixed: Proper object structure
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }),
+}),
+
+
     })
 })
+
 
 
 

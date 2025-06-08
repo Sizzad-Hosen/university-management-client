@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { REHYDRATE } from "redux-persist";
 
 export type TUser = {
   userId: string;
@@ -20,18 +21,32 @@ const initialState: TAuthState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
+
   reducers: {
     setUser: (state, action: PayloadAction<{user: TUser, token: string}>) => {
       const { user, token } = action.payload;
       state.user = user;
       state.token = token;
     },
+    
     logout: (state) => {
       state.user = null;
       state.token = null;
-    }
+    },
+
+    extraReducers: (builder) => {
+    builder.addCase(REHYDRATE, (state, action: any) => {
+      // Handle rehydration
+      if (action.payload?.auth) {
+        state.user = action.payload.auth.user;
+        state.token = action.payload.auth.token;
+      }
+    });
+  }
   }
 });
+
+
 
 export const { setUser, logout } = authSlice.actions;
 
