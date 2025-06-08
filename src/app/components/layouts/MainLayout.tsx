@@ -3,14 +3,15 @@ import React from 'react';
 import { Layout, Menu, theme } from 'antd';
 import Link from 'next/link';
 import type { MenuProps } from 'antd';
-import Banner from '../banner/Banner';
+
+import Home from '../Home/Home';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const items: MenuProps['items'] = [
   {
-    key: 'dashboard',
-    label: <Link href="/dashboard">Dashboard</Link>,
+    key: 'Home',
+    label: <Link href="/">Home</Link>,
   },
   {
     key: 'about',
@@ -49,7 +50,7 @@ const App: React.FC = () => {
               borderRadius: borderRadiusLG,
             }}
           >
-           <Banner></Banner>
+         <Home></Home>
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
